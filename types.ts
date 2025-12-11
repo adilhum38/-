@@ -24,9 +24,18 @@ export interface Answer {
   choice: FlagType;
 }
 
+export interface GameSession {
+  id: string;
+  timestamp: number;
+  profile: UserProfile;
+  answers: Answer[];
+  analysis: string;
+}
+
 export enum AppState {
   ONBOARDING = 'ONBOARDING',
   QUIZ = 'QUIZ',
   ANALYZING = 'ANALYZING',
-  RESULTS = 'RESULTS'
+  RESULTS = 'RESULTS',
+  ADMIN = 'ADMIN'
 }

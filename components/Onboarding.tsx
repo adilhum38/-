@@ -1,26 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { UserProfile, Gender, Language } from '../types';
 import { REGIONS, UI_TEXT } from '../constants';
-import { User, MapPin, Phone, Calendar, Globe } from 'lucide-react';
+import { User, MapPin, Phone, Calendar, ShieldCheck } from 'lucide-react';
 
 interface OnboardingProps {
   onComplete: (profile: UserProfile) => void;
   onLanguageChange: (lang: Language) => void;
+  onAdminRequest: () => void;
   currentLang: Language;
 }
 
-const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onLanguageChange, currentLang }) => {
+const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onLanguageChange, onAdminRequest, currentLang }) => {
   const [phone, setPhone] = useState('');
   const [age, setAge] = useState<number | ''>('');
   const [gender, setGender] = useState<Gender>('female');
   const [region, setRegion] = useState(REGIONS[currentLang][0]);
-
+  
   const t = UI_TEXT[currentLang];
 
   // Update default region when language changes
   useEffect(() => {
     setRegion(REGIONS[currentLang][0]);
   }, [currentLang]);
+
+  const handleAdminAuth = () => {
+    // Password protection removed for user access request
+    onAdminRequest();
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,8 +42,18 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onLanguageChange, c
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-6 animate-[fadeIn_0.5s_ease-out]">
-      <div className="flex justify-end mb-4">
+    <div className="w-full max-w-md mx-auto p-6 animate-[fadeIn_0.5s_ease-out] relative">
+      <div className="flex justify-between items-center mb-4">
+        {/* Admin Button */}
+        <button 
+          onClick={handleAdminAuth}
+          className="text-slate-600 hover:text-indigo-400 transition-colors p-2 rounded-full hover:bg-slate-800"
+          title="Admin Panel"
+        >
+          <ShieldCheck size={20} />
+        </button>
+
+        {/* Language Switcher */}
         <div className="bg-slate-800 rounded-full p-1 flex border border-slate-700">
           <button 
             onClick={() => onLanguageChange('ru')}
@@ -54,7 +70,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete, onLanguageChange, c
         </div>
       </div>
 
-      <div className="text-center mb-8">
+      <div className="text-center mb-8 select-none cursor-default">
         <h1 className="text-3xl font-extrabold bg-gradient-to-r from-red-400 to-green-400 bg-clip-text text-transparent mb-2">
           {t.title}
         </h1>

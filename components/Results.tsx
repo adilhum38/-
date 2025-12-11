@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Flag, CheckCircle2, RotateCcw, Share2 } from 'lucide-react';
+import { Flag, CheckCircle2, RotateCcw, Share2, ShieldCheck } from 'lucide-react';
 import { Answer, Language } from '../types';
 import { UI_TEXT } from '../constants';
 
@@ -9,17 +9,34 @@ interface ResultsProps {
   analysis: string;
   onRestart: () => void;
   language: Language;
+  onAdminRequest: () => void;
 }
 
-const Results: React.FC<ResultsProps> = ({ answers, analysis, onRestart, language }) => {
+const Results: React.FC<ResultsProps> = ({ answers, analysis, onRestart, language, onAdminRequest }) => {
   const redFlags = answers.filter(a => a.choice === 'RED').length;
   const greenFlags = answers.filter(a => a.choice === 'GREEN').length;
   const t = UI_TEXT[language];
 
+  const handleAdminAuth = () => {
+    // Password protection removed for user access request
+    onAdminRequest();
+  };
+
   return (
-    <div className="w-full max-w-2xl mx-auto p-6 pb-20 animate-[fadeIn_0.8s_ease-out]">
+    <div className="w-full max-w-2xl mx-auto p-6 pb-20 animate-[fadeIn_0.8s_ease-out] relative">
       
-      {/* Header Stats */}
+      {/* Header with Admin Button */}
+      <div className="flex justify-between items-center mb-4">
+         <button 
+          onClick={handleAdminAuth}
+          className="text-slate-600 hover:text-indigo-400 transition-colors p-2 rounded-full hover:bg-slate-800"
+          title="Admin Panel"
+        >
+          <ShieldCheck size={20} />
+        </button>
+      </div>
+
+      {/* Stats Card */}
       <div className="bg-slate-800 rounded-3xl p-8 mb-8 text-center shadow-2xl border border-slate-700">
         <h2 className="text-3xl font-extrabold text-white mb-6">{t.yourResult}</h2>
         
